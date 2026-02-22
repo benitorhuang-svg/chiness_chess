@@ -148,40 +148,72 @@ body {
 /* Piece - Strict Circular Logic */
 .piece {
     position: absolute;
-    width: 11.5%;
-    height: 10.2%;
+    width: 11%;
+    height: 10%;
     transform: translate(-50%, -50%);
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.2, 0, 0.2, 1);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 10;
 }
 
 .piece-inner {
     width: 95%;
     aspect-ratio: 1/1;
-    /* Force circular */
     margin: 0 auto;
-    background: radial-gradient(circle at 30% 30%, #fff 0%, #fdf5e6 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(18px, 3.2vh, 32px);
+    font-size: clamp(22px, 3.8vh, 36px);
     font-weight: 900;
-    border: 3px solid #5d4037;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
-    color: var(--piece-black);
+    position: relative;
+
+    /* Premium Lacquer Base */
+    background: #0a0a0a;
+    border: 3px solid #2a1b15;
+
+    /* Soft top surface lighting */
+    background: radial-gradient(circle at 35% 35%, #1a1a1a 0%, #050505 100%);
+
+    /* Multi-layered environmental shadow for "grounded" look */
+    box-shadow:
+        0 8px 15px rgba(0, 0, 0, 0.6),
+        0 2px 4px rgba(0, 0, 0, 0.4);
+
+    transition: inherit;
+    font-family: "PingFang TC", "Microsoft JhengHei", serif;
 }
 
+/* Black Pieces - Muted Gold Calligraphy */
+.piece.black .piece-inner {
+    color: #b8860b;
+    border-color: #4a3c2a;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+    /* Inset gilding effect */
+    box-shadow:
+        0 8px 15px rgba(0, 0, 0, 0.6),
+        inset 0 0 10px rgba(184, 134, 11, 0.1);
+}
+
+/* Red Pieces - Deep Vermillion Calligraphy */
 .piece.red .piece-inner {
-    color: var(--piece-red);
-    border-color: #8b0000;
+    color: #a32626;
+    border-color: #5a1a1a;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+    /* Inset vermillion effect */
+    box-shadow:
+        0 8px 15px rgba(0, 0, 0, 0.6),
+        inset 0 0 10px rgba(163, 38, 38, 0.1);
 }
 
 .piece.selected .piece-inner {
-    transform: scale(1.15);
+    transform: scale(1.1);
+    background: #111;
     border-color: var(--accent);
-    box-shadow: 0 0 20px var(--accent);
+    box-shadow:
+        0 15px 30px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(227, 192, 141, 0.4),
+        inset 0 0 15px rgba(227, 192, 141, 0.1);
 }
 
 .move-hint {

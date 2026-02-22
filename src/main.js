@@ -27,6 +27,7 @@ class App {
         this.elapsedSeconds = 0;
         this.aiEnabled = false;
         this.aiDepth = 2; // 預設入門
+        this.gameOver = false; // 新增遊戲結束狀態
 
         this.init();
     }
@@ -89,6 +90,7 @@ class App {
 
     checkWin(moveEntry) {
         if (moveEntry.captured && "將帥".includes(moveEntry.captured.type)) {
+            this.gameOver = true;
             this.showToast(`比賽結束！${moveEntry.moved.color === COLORS.RED ? '紅方' : '黑方'} 贏了`);
         }
     }
@@ -112,6 +114,7 @@ class App {
         if (remote || confirm("確定要重置棋盤嗎？")) {
             this.engine = new ChessEngine();
             this.gameStarted = false;
+            this.gameOver = false;
             this.elapsedSeconds = 0;
             if (!remote) this.network.send({ type: 'reset' });
             this.update();
@@ -125,6 +128,7 @@ class App {
     }
 
     handlePieceClick(x, y) {
+        if (this.gameOver) return; // 遊戲結束後禁止點擊
         if (this.myColor && this.engine.turn !== this.myColor) return;
 
         // 核心修復：如果已經有選取棋子，且點擊的是「可攻擊」的敵方棋子
