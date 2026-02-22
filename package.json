@@ -1,0 +1,11 @@
+{
+    "name": "chinese-chess-industrial",
+    "version": "1.0.0",
+    "description": "Industrial grade Chinese Chess PWA",
+    "scripts": {
+        "dev": "npx serve ."
+    },
+    "dependencies": {
+        "serve": "^14.2.4"
+    }
+}

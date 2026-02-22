@@ -1,0 +1,6 @@
+.gemini/
+.specify/
+node_modules/
+.DS_Store
+*.log
+.vscode/

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>工業級中國象棋 PWA</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="manifest" href="web/manifest.json">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- External Libraries -->
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+</head>
+
+<body>
+
+    <div id="app-root">
+        <div class="industrial-layout">
+            <!-- Left: Board -->
+            <div class="board-container">
+                <div class="chess-board" id="board-ui">
+                    <!-- 專業座標標註 -->
+                    <div class="board-coords coords-top">
+                        <span class="coord-item">1</span><span class="coord-item">2</span><span
+                            class="coord-item">3</span>
+                        <span class="coord-item">4</span><span class="coord-item">5</span><span
+                            class="coord-item">6</span>
+                        <span class="coord-item">7</span><span class="coord-item">8</span><span
+                            class="coord-item">9</span>
+                    </div>
+
+                    <svg class="svg-layer" viewBox="0 0 80 90">
+                        <g class="grid-line">
+                            <!-- Lines -->
+                            <line x1="0" y1="0" x2="80" y2="0" />
+                            <line x1="0" y1="10" x2="80" y2="10" />
+                            <line x1="0" y1="20" x2="80" y2="20" />
+                            <line x1="0" y1="30" x2="80" y2="30" />
+                            <line x1="0" y1="40" x2="80" y2="40" />
+                            <line x1="0" y1="50" x2="80" y2="50" />
+                            <line x1="0" y1="60" x2="80" y2="60" />
+                            <line x1="0" y1="70" x2="80" y2="70" />
+                            <line x1="0" y1="80" x2="80" y2="80" />
+                            <line x1="0" y1="90" x2="80" y2="90" />
+                            <line x1="0" y1="0" x2="0" y2="90" />
+                            <line x1="10" y1="0" x2="10" y2="40" />
+                            <line x1="10" y1="50" x2="10" y2="90" />
+                            <line x1="20" y1="0" x2="20" y2="40" />
+                            <line x1="20" y1="50" x2="20" y2="90" />
+                            <line x1="30" y1="0" x2="30" y2="40" />
+                            <line x1="30" y1="50" x2="30" y2="90" />
+                            <line x1="40" y1="0" x2="40" y2="90" />
+                            <line x1="50" y1="0" x2="50" y2="40" />
+                            <line x1="50" y1="50" x2="50" y2="90" />
+                            <line x1="60" y1="0" x2="60" y2="40" />
+                            <line x1="60" y1="50" x2="60" y2="90" />
+                            <line x1="70" y1="0" x2="70" y2="40" />
+                            <line x1="70" y1="50" x2="70" y2="90" />
+                            <line x1="80" y1="0" x2="80" y2="90" />
+                            <!-- Palace -->
+                            <line x1="30" y1="0" x2="50" y2="20" />
+                            <line x1="50" y1="0" x2="30" y2="20" />
+                            <line x1="30" y1="70" x2="50" y2="90" />
+                            <line x1="50" y1="70" x2="30" y2="90" />
+                        </g>
+                    </svg>
+
+                    <div class="board-coords coords-bottom">
+                        <span class="coord-item">一</span><span class="coord-item">二</span><span
+                            class="coord-item">三</span>
+                        <span class="coord-item">四</span><span class="coord-item">五</span><span
+                            class="coord-item">六</span>
+                        <span class="coord-item">七</span><span class="coord-item">八</span><span
+                            class="coord-item">九</span>
+                    </div>
+
+                    <div class="pieces-layer" id="pieces-layer"></div>
+                </div>
+            </div>
+
+            <!-- Right: Panel -->
+            <div class="side-panel">
+                <div class="panel-header">
+                    <h1>中國象棋</h1>
+                    <div class="header-controls">
+                        <div class="control-item">
+                            <label class="switch">
+                                <input type="checkbox" id="ai-toggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span class="label-text">單機 AI</span>
+                        </div>
+                        <div class="difficulty-group" id="ai-difficulty-group">
+                            <button class="diff-btn active" data-depth="2">入門</button>
+                            <button class="diff-btn" data-depth="3">進階</button>
+                            <button class="diff-btn" data-depth="4">大師</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tabs-nav">
+                    <button class="tab-trigger active" data-tab="game">對戰</button>
+                    <button class="tab-trigger" data-tab="history">記譜</button>
+                    <button class="tab-trigger" data-tab="set">設定</button>
+                </div>
+
+                <div id="tab-game" class="tab-view active">
+                    <div class="status-card">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div id="turn-dot" style="width:14px; height:14px; border-radius:50%; background:red;">
+                            </div>
+                            <span id="turn-label" style="font-weight:300;">紅方走子</span>
+                        </div>
+                        <div id="time-display" class="timer">00:00</div>
+                    </div>
+
+                    <div style="margin: 5px 0; color:#555; font-size:13px; font-weight:200;">您的角色: <span id="my-role"
+                            style="color:var(--accent); font-weight:400;">載入中...</span></div>
+
+                    <div class="btn-group">
+                        <button class="btn secondary" id="btn-undo">悔棋</button>
+                        <button class="btn secondary" id="btn-reset">重置</button>
+                    </div>
+                    <button class="btn primary" id="btn-invite" style="margin-top:15px;">連線與邀請</button>
+                </div>
+
+                <div id="tab-history" class="tab-view">
+                    <div id="history-list" class="history-container">
+                        <div style="text-align:center; color:#555; margin-top:50px;">尚無走法紀錄</div>
+                    </div>
+                </div>
+
+                <div id="tab-set" class="tab-view">
+                    <div style="padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                        <strong style="color:var(--accent);">連線資訊</strong>
+                        <div style="margin-top:10px;">
+                            <p style="font-size:12px; color:#666; margin:0;">我的專屬 ID: <br><span id="my-id-display"
+                                    style="color:var(--accent); font-family:monospace;">初始化中...</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-invite" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="margin-top:0; color:var(--accent);">邀請或加入對戰</h3>
+            <p style="font-size:14px; color:#aaa;">分享網址給對手：</p>
+            <input type="text" id="invite-url" class="modal-input" readonly onclick="this.select()">
+
+            <p style="font-size:14px; color:#aaa; margin-top:20px;">或是輸入對方的 ID 加入：</p>
+            <input type="text" id="join-id-input" class="modal-input" placeholder="貼上對方的 ID">
+
+            <div class="btn-group">
+                <button class="btn primary" id="btn-join-confirm">確認加入</button>
+                <button class="btn secondary" id="modal-close">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">訊息提示</div>
+
+    <!-- App Entry -->
+    <script type="module" src="src/main.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW Registered'))
+                    .catch(err => console.log('SW Registration Failed', err));
+            });
+        }
+    </script>
+</body>
+
+</html>
